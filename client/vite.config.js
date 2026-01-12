@@ -9,6 +9,14 @@ export default defineConfig({
   define: {
     global: 'globalThis',
   },
+  build: {
+    assetsDir: 'assets',
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
+  },
   server: {
     proxy: {
       '/api': {
