@@ -11,6 +11,7 @@ services:
       - key: MONGODB_URI
         sync: false
       - key: JWT_SECRET
+        value: your_jwt_secret_key_here_please_change_in_render_dashboard
         sync: false
       - key: CLIENT_URL
         value: https://your-app-name.onrender.com
