@@ -23,17 +23,29 @@ function AuthLogin() {
     setIsLoading(true);
     dispatch(loginUser(formData))
       .then((data) => {
+        console.log('Login response:', data); // Debug log
         if (data?.payload?.success) {
           toast({
             title: data?.payload?.message,
             variant: "success",
           });
         } else {
+          // Handle both server errors and network errors
+          const errorMessage = data?.payload?.message || 
+                              data?.error?.message || 
+                              "Login failed. Please try again.";
           toast({
-            title: data?.payload?.message,
+            title: errorMessage,
             variant: "destructive",
           });
         }
+      })
+      .catch((error) => {
+        console.error('Login error:', error);
+        toast({
+          title: "Network error. Please try again.",
+          variant: "destructive",
+        });
       })
       .finally(() => setIsLoading(false));
   }

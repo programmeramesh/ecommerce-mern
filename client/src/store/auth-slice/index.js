@@ -5,6 +5,7 @@ const initialState = {
   isAuthenticated: false,
   isLoading: true,
   user: null,
+  error: null,
 };
 
 export const registerUser = createAsyncThunk(
@@ -96,6 +97,8 @@ const authSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
         state.isAuthenticated = false;
+        // Store error message for display
+        state.error = action.error.message || "Login failed";
       })
       .addCase(checkAuth.pending, (state) => {
         state.isLoading = true;

@@ -86,10 +86,12 @@ const loginUser = async (req, res) => {
       },
     });
   } catch (e) {
-    console.log(e);
+    console.log("Login error details:", e);
+    console.log("Error stack:", e.stack);
     res.status(500).json({
       success: false,
-      message: "Some error occured",
+      message: "Some error occurred during login",
+      error: process.env.NODE_ENV === 'development' ? e.message : undefined,
     });
   }
 };
