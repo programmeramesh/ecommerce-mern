@@ -1,4 +1,4 @@
-const Feature = require("../../models/feature");
+const Feature = require("../../models/Feature");
 
 const addFeatureImage = async (req, res) => {
   try {
