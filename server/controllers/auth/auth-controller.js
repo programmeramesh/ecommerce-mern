@@ -68,13 +68,11 @@ const loginUser = async (req, res) => {
       { expiresIn: "60m" }
     );
 
-    // Configure cookie options based on environment
-    const isProd = process.env.NODE_ENV === "production";
+    // Configure cookie options for cross-origin requests
     const cookieOptions = {
       httpOnly: true,
-      secure: isProd, // required when sameSite is 'none'
-      sameSite: isProd ? "none" : "lax",
-      // path: '/', // default
+      secure: true, // required for cross-origin cookies
+      sameSite: "none", // required for cross-origin cookies
     };
 
     res.cookie("token", token, cookieOptions).json({
@@ -99,12 +97,10 @@ const loginUser = async (req, res) => {
 //logout
 
 const logoutUser = (req, res) => {
-  const isProd = process.env.NODE_ENV === "production";
   const cookieOptions = {
     httpOnly: true,
-    secure: isProd,
-    sameSite: isProd ? "none" : "lax",
-    // path: '/',
+    secure: true,
+    sameSite: "none",
   };
 
   res.clearCookie("token", cookieOptions).json({
