@@ -38,6 +38,9 @@ export const logoutUser = createAsyncThunk(
   "/auth/logout",
 
   async () => {
+    // Clear token from localStorage
+    localStorage.removeItem('token');
+    
     const response = await api.post(
       "/api/auth/logout",
       {}

@@ -76,18 +76,11 @@ const loginUser = async (req, res) => {
 
     console.log("JWT token created successfully");
 
-    // Configure cookie options for cross-origin requests
-    const cookieOptions = {
-      httpOnly: true,
-      secure: true, // required for cross-origin cookies
-      sameSite: "none", // required for cross-origin cookies
-    };
-
-    console.log("Setting cookie with options:", cookieOptions);
-
-    res.cookie("token", token, cookieOptions).json({
+    // Simplify response - return token in body instead of cookie for cross-origin
+    res.status(200).json({
       success: true,
       message: "Logged in successfully",
+      token: token,
       user: {
         email: checkUser.email,
         role: checkUser.role,
@@ -123,7 +116,9 @@ const logoutUser = (req, res) => {
 
 //auth middleware
 const authMiddleware = async (req, res, next) => {
-  const token = req.cookies.token;
+  // Try to get token from cookie first, then from Authorization header
+  const token = req.cookies.token || req.headers.authorization?.replace('Bearer ', '');
+  
   if (!token)
     return res.status(401).json({
       success: false,
