@@ -38,9 +38,13 @@ const registerUser = async (req, res) => {
 //login
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
+  
+  console.log("Login attempt for email:", email);
 
   try {
     const checkUser = await User.findOne({ email });
+    console.log("User found:", !!checkUser);
+    
     if (!checkUser)
       return res.json({
         success: false,
@@ -51,6 +55,8 @@ const loginUser = async (req, res) => {
       password,
       checkUser.password
     );
+    console.log("Password match:", checkPasswordMatch);
+    
     if (!checkPasswordMatch)
       return res.json({
         success: false,
@@ -64,9 +70,11 @@ const loginUser = async (req, res) => {
         email: checkUser.email,
         userName: checkUser.userName,
       },
-      "CLIENT_SECRET_KEY",
+      process.env.JWT_SECRET || "CLIENT_SECRET_KEY",
       { expiresIn: "60m" }
     );
+
+    console.log("JWT token created successfully");
 
     // Configure cookie options for cross-origin requests
     const cookieOptions = {
@@ -74,6 +82,8 @@ const loginUser = async (req, res) => {
       secure: true, // required for cross-origin cookies
       sameSite: "none", // required for cross-origin cookies
     };
+
+    console.log("Setting cookie with options:", cookieOptions);
 
     res.cookie("token", token, cookieOptions).json({
       success: true,
@@ -121,7 +131,7 @@ const authMiddleware = async (req, res, next) => {
     });
 
   try {
-    const decoded = jwt.verify(token, "CLIENT_SECRET_KEY");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "CLIENT_SECRET_KEY");
     req.user = decoded;
     next();
   } catch (error) {
