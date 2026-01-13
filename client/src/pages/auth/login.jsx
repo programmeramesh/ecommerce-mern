@@ -23,7 +23,7 @@ function AuthLogin() {
     setIsLoading(true);
     dispatch(loginUser(formData))
       .then((data) => {
-        console.log('Login response:', data); // Debug log
+        // console.log('Login response:', data); // Debug log
         if (data?.payload?.success) {
           toast({
             title: data?.payload?.message,
